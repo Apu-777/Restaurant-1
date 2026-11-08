@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Menu — Ember &amp; Salt</title>
+  <meta name="description" content="A short seasonal menu cooked over live fire.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="menu">
+  <div class="curtain"><span>Ember &amp; Salt</span></div>
+
+  <main>
+    <section class="phero">
+      <div class="hero__media"><img class="hero__bg" data-speed="8" data-img="plate" data-w="1800" alt=""></div>
+      <div class="wrap hero__inner">
+        <p class="eyebrow hero__meta">The menu</p>
+        <h1 class="hero__title">
+          <span class="ln"><span>Tonight,</span></span>
+          <span class="ln"><span><em>from the fire.</em></span></span>
+        </h1>
+      </div>
+    </section>
+
+    <section class="menu">
+      <div class="wrap">
+        <div class="tabs reveal" role="tablist" id="menuTabs"></div>
+        <ul class="menu__list" id="menuList"></ul>
+        <p class="menu__note reveal"><b>V</b> Vegetarian &nbsp;·&nbsp; <b>GF</b> Gluten-free &nbsp;·&nbsp; Please tell us about allergies before ordering. Menu changes with the market.</p>
+      </div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <h2 class="split">Hungry yet?</h2>
+        <a href="reservations.html" class="btn mag reveal">Reserve a table</a>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

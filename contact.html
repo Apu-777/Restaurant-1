@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Contact — Ember &amp; Salt</title>
+  <meta name="description" content="Find us, call us, or send a message to the Ember & Salt team.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="contact">
+  <div class="curtain"><span>Ember &amp; Salt</span></div>
+
+  <main>
+    <section class="phero">
+      <div class="hero__media"><img class="hero__bg" data-speed="8" data-img="room" data-w="1800" alt=""></div>
+      <div class="wrap hero__inner">
+        <p class="eyebrow hero__meta">Contact</p>
+        <h1 class="hero__title">
+          <span class="ln"><span>Come in,</span></span>
+          <span class="ln"><span><em>stay a while.</em></span></span>
+        </h1>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <ul class="icards">
+        <li class="reveal"><span>Find us</span><b>24 Riverside Road</b><p>Five minutes from the old bridge.</p></li>
+        <li class="reveal"><span>Call</span><b>+880 1234 567 890</b><p>Daily, 12pm – 9pm.</p></li>
+        <li class="reveal"><span>Write</span><b>hello@emberandsalt.example</b><p>We reply within a day.</p></li>
+        <li class="reveal"><span>Events</span><b>events@emberandsalt.example</b><p>Weddings, catering, pop-ups.</p></li>
+      </ul>
+    </section>
+
+    <section class="reserve">
+      <div class="wrap reserve__grid">
+        <div>
+          <p class="eyebrow reveal">Send a message</p>
+          <h2 class="split">We’d love to hear from you.</h2>
+          <div class="map reveal" role="img" aria-label="Stylised map showing the restaurant on Riverside Road">
+            <svg viewBox="0 0 400 260" preserveAspectRatio="xMidYMid slice">
+              <rect width="400" height="260" fill="#14110f"/>
+              <path d="M-10 180 C80 150 140 220 230 190 S360 120 420 150" fill="none" stroke="#2a3a44" stroke-width="22"/>
+              <g stroke="#2b2622" stroke-width="10" fill="none" stroke-linecap="round">
+                <path d="M40 0 V260"/><path d="M130 0 V260"/><path d="M0 70 H400"/><path d="M260 0 V260"/><path d="M0 130 H400"/>
+              </g>
+              <g stroke="#3a332d" stroke-width="2" fill="none"><path d="M185 0 L215 260"/></g>
+            </svg>
+            <span class="map__pin"><i></i></span>
+            <span class="map__label">Ember &amp; Salt · 24 Riverside Road</span>
+          </div>
+        </div>
+        <form class="form reveal" data-form novalidate>
+          <label>Name<input name="name" type="text" required autocomplete="name"></label>
+          <label>Email<input name="email" type="email" required autocomplete="email"></label>
+          <label>Topic
+            <select name="topic"><option>General question</option><option>Private event</option><option>Catering</option><option>Press</option><option>Careers</option></select>
+          </label>
+          <label>Message<textarea name="message" rows="4" required></textarea></label>
+          <button class="btn btn--full mag" type="submit">Send message</button>
+          <p class="form__msg" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+
+    <section class="wrap">
+      <p class="eyebrow reveal">Good to know</p>
+      <h2 class="split">Questions, answered.</h2>
+      <div class="faq">
+        <details class="reveal"><summary>Do you take walk-ins?</summary><p>Yes, the bar and six tables are kept for walk-ins every evening. Weekend waits can run long, so booking is wise.</p></details>
+        <details class="reveal"><summary>Can you cater to dietary needs?</summary><p>Almost always. Tell us when you book and the kitchen will plan around you. Vegetarian and gluten-free dishes are marked on the menu.</p></details>
+        <details class="reveal"><summary>Is there a dress code?</summary><p>None. Come as you are, though the room can get warm near the hearth.</p></details>
+        <details class="reveal"><summary>How large a group can you seat?</summary><p>Up to twelve at our long table. For larger parties, write to our events team and we’ll arrange a set menu.</p></details>
+        <details class="reveal"><summary>Do you host private events?</summary><p>Yes, from intimate dinners to weddings. See our <a class="link" href="portfolio.html">portfolio</a> for past events.</p></details>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

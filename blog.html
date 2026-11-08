@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Journal — Ember &amp; Salt</title>
+  <meta name="description" content="Stories, recipes and notes from the Ember & Salt kitchen.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="blog">
+  <div class="curtain"><span>Ember &amp; Salt</span></div>
+
+  <main>
+    <section class="phero">
+      <div class="hero__media"><img class="hero__bg" data-speed="8" data-img="leeks" data-w="1800" alt=""></div>
+      <div class="wrap hero__inner">
+        <p class="eyebrow hero__meta">The journal</p>
+        <h1 class="hero__title">
+          <span class="ln"><span>Notes from</span></span>
+          <span class="ln"><span>the <em>kitchen.</em></span></span>
+        </h1>
+      </div>
+    </section>
+
+    <section class="wrap blog">
+      <div class="tabs tabs--dark" id="postTabs" role="tablist"></div>
+      <div class="posts" id="posts"></div>
+    </section>
+
+    <section class="cta">
+      <div class="wrap">
+        <h2 class="split">One letter,<br>once a <em>month.</em></h2>
+        <form class="form form--inline reveal" data-form novalidate>
+          <input name="email" type="email" required placeholder="Your email" aria-label="Email">
+          <button class="btn mag" type="submit">Subscribe</button>
+          <p class="form__msg" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>

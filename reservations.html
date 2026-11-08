@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Reservations — Ember &amp; Salt</title>
+  <meta name="description" content="Book a table at Ember & Salt in four quick steps.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;1,9..144,300&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body data-page="reservations">
+  <div class="curtain"><span>Ember &amp; Salt</span></div>
+
+  <main>
+    <section class="phero">
+      <div class="hero__media"><img class="hero__bg" data-speed="8" data-img="dining" data-w="1800" alt=""></div>
+      <div class="wrap hero__inner">
+        <p class="eyebrow hero__meta">Reservations</p>
+        <h1 class="hero__title">
+          <span class="ln"><span>Save your seat</span></span>
+          <span class="ln"><span><em>by the fire.</em></span></span>
+        </h1>
+      </div>
+    </section>
+
+    <section class="res">
+      <div class="wrap res__grid">
+        <div class="res__main">
+          <ol class="steps" id="steps">
+            <li class="is-on"><b>1</b><span>Date &amp; party</span></li>
+            <li><b>2</b><span>Time &amp; seat</span></li>
+            <li><b>3</b><span>Your details</span></li>
+            <li><b>✓</b><span>Confirmed</span></li>
+          </ol>
+
+          <div class="wiz" id="wiz">
+            <!-- Step 1 -->
+            <div class="pane" data-pane="1">
+              <h3 class="pane__t stag">When are you coming?</h3>
+              <label class="stag">Date<input type="date" id="rDate"></label>
+              <div class="field stag">
+                <span class="lab">Guests</span>
+                <div class="stepper">
+                  <button type="button" id="gm" aria-label="Fewer guests">−</button>
+                  <output id="gN">2</output>
+                  <button type="button" id="gp" aria-label="More guests">+</button>
+                </div>
+                <small>Party of nine or more? <a class="link" href="contact.html">Contact us</a>.</small>
+              </div>
+              <div class="field stag">
+                <span class="lab">Occasion</span>
+                <div class="chips" id="occ">
+                  <button type="button" class="chip is-on" data-v="Dinner">Dinner</button>
+                  <button type="button" class="chip" data-v="Birthday">Birthday</button>
+                  <button type="button" class="chip" data-v="Anniversary">Anniversary</button>
+                  <button type="button" class="chip" data-v="Business">Business</button>
+                </div>
+              </div>
+              <p class="wiz__err" role="alert"></p>
+              <div class="wiz__nav"><span></span><button class="btn" type="button" data-next>Continue</button></div>
+            </div>
+
+            <!-- Step 2 -->
+            <div class="pane" data-pane="2" hidden>
+              <h3 class="pane__t stag">Pick a time &amp; a seat.</h3>
+              <div class="field stag">
+                <span class="lab">Available times</span>
+                <div class="chips" id="slots"></div>
+                <small id="slotNote"></small>
+              </div>
+              <div class="field stag">
+                <span class="lab">Seating</span>
+                <div class="chips" id="seats">
+                  <button type="button" class="chip is-on" data-v="Dining room">Dining room</button>
+                  <button type="button" class="chip" data-v="Near the hearth">Near the hearth</button>
+                  <button type="button" class="chip" data-v="Bar">Bar</button>
+                  <button type="button" class="chip" data-v="Terrace">Terrace</button>
+                </div>
+              </div>
+              <p class="wiz__err" role="alert"></p>
+              <div class="wiz__nav"><button class="link" type="button" data-back>← Back</button><button class="btn" type="button" data-next>Continue</button></div>
+            </div>
+
+            <!-- Step 3 -->
+            <div class="pane" data-pane="3" hidden>
+              <h3 class="pane__t stag">Who’s the table for?</h3>
+              <form id="rForm" class="form" novalidate>
+                <label class="stag">Name<input name="name" type="text" required autocomplete="name"></label>
+                <label class="stag">Email<input name="email" type="email" required autocomplete="email"></label>
+                <div class="form__row stag">
+                  <label>Phone<input name="phone" type="tel" autocomplete="tel"></label>
+                  <label>Notes<input name="notes" type="text" placeholder="Allergies, requests…"></label>
+                </div>
+                <p class="wiz__err" role="alert"></p>
+                <div class="wiz__nav"><button class="link" type="button" data-back>← Back</button><button class="btn" type="submit">Confirm booking</button></div>
+              </form>
+            </div>
+
+            <!-- Step 4 -->
+            <div class="pane done" data-pane="4" hidden>
+              <div class="ok" id="ok">
+                <svg viewBox="0 0 100 100" aria-hidden="true"><circle cx="50" cy="50" r="44"/><path d="M30 52l14 14 27-30"/></svg>
+              </div>
+              <h3 class="pane__t" id="who">You’re booked.</h3>
+              <p class="lead">A confirmation is on its way. Booking reference <b id="ref"></b>.</p>
+              <dl class="sum" id="sum"></dl>
+              <div class="wiz__nav"><button class="btn" type="button" id="ics">Add to calendar</button><button class="link" type="button" id="again">Make another booking</button></div>
+              <p class="demo">This is a front-end demo — nothing is actually sent.</p>
+            </div>
+          </div>
+        </div>
+
+        <aside class="res__side">
+          <h3>Good to know</h3>
+          <dl class="hours">
+            <div><dt>Tue – Thu</dt><dd>6pm – 10:30pm</dd></div>
+            <div><dt>Fri – Sat</dt><dd>6pm – 11:30pm</dd></div>
+            <div><dt>Sunday</dt><dd>1pm – 9pm</dd></div>
+            <div><dt>Monday</dt><dd>Closed</dd></div>
+          </dl>
+          <ul class="notes">
+            <li>Tables are held for 15 minutes.</li>
+            <li>The bar and six tables are kept for walk-ins.</li>
+            <li>Tell us about allergies when you book.</li>
+            <li>Parties over eight: <a class="link" href="contact.html">get in touch</a>.</li>
+          </ul>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
