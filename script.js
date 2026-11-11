@@ -179,17 +179,93 @@
   const popIn = (sel, ctx) => { if (window.gsap && !reduce) gsap.from($$(sel, ctx), { y: 30, opacity: 0, duration: .7, stagger: .08, ease: 'power3.out', clearProps: 'all' }); };
 
   /* ================= Menu page ================= */
-  const menuList = $('#menuList');
-  if (menuList) {
+  /* The menu is a book. Each leaf has a front (right page) and a back (left page).
+     Spread k shows the back of leaf k-1 on the left and the front of leaf k on the right. */
+  let book = null;
+  const bookEl = $('#book');
+  if (bookEl) {
     const cats = Object.keys(MENU);
-    const draw = (c, animate) => {
-      menuList.innerHTML = MENU[c].map(([n, d, p, t]) =>
-        `<li class="dish"><div class="dish__top"><h3>${n}${t ? `<small>${t}</small>` : ''}</h3><i></i><span>${p}</span></div><p>${d}</p></li>`).join('');
-      if (animate) popIn('.dish', menuList);
+    const CAT_IMG = { Starters: 'leeks', Mains: 'steak', Sides: 'market', Desserts: 'plate', Drinks: 'lounge' };
+    const num = i => String(i + 1).padStart(2, '0');
+    const dishes = c => MENU[c].map(([n, d, p, t]) =>
+      `<li class="dish"><div class="dish__top"><h3>${n}${t ? `<small>${t}</small>` : ''}</h3><i></i><span>${p}</span></div><p>${d}</p></li>`).join('');
+
+    const cover = `<div class="pg pg--cover">
+        <p class="eyebrow">Autumn 2026</p>
+        <div><span class="pg__logo">Ember<em>&amp;</em>Salt</span><h2>The <em>Menu</em></h2></div>
+        <p class="pg__hint">Scroll or press next to open</p></div>`;
+    const listPage = (c, i) => `<div class="pg pg--list">
+        <header class="pg__head"><span>${num(i)}</span><h2>${c}</h2></header>
+        <ul class="pg__dishes">${dishes(c)}</ul>
+        <footer class="pg__foot">${i * 2 + 3}</footer></div>`;
+    const imagePage = (c, i) => `<div class="pg pg--img">${imgTag(CAT_IMG[c], IMG[CAT_IMG[c]][1], 900)}
+        <div class="pg__cap"><span>Chapter ${num(i)}</span><h2>${c}</h2></div></div>`;
+    const insideCover = `<div class="pg pg--plain">
+        <p class="eyebrow">Welcome</p>
+        <h2>Tonight, <em>from the fire.</em></h2>
+        <p>Everything on this menu touches oak coals at some point. The list is short on purpose and changes with the market.</p>
+        <p class="pg__legend"><b>V</b> Vegetarian &nbsp;·&nbsp; <b>GF</b> Gluten-free</p></div>`;
+    const quotePage = `<div class="pg pg--plain pg--quote">
+        <blockquote>“Good fire, good produce, and the patience to leave both alone.”</blockquote>
+        <cite>Chef Arman Rahim</cite></div>`;
+    const endPage = `<div class="pg pg--plain pg--end">
+        <p class="eyebrow">That’s the menu</p>
+        <h2>Hungry <em>yet?</em></h2>
+        <p>Tue – Sun · 6pm – 11pm<br>24 Riverside Road</p>
+        <a href="reservations.html" class="btn mag">Reserve a table</a></div>`;
+
+    // Leaf fronts and backs, in order
+    const fronts = [cover, ...cats.map(listPage)];
+    const backs  = [...cats.map(imagePage), quotePage];
+    const N = fronts.length;
+    const LABELS = ['Cover', ...cats, 'The end'];
+
+    bookEl.innerHTML =
+      `<div class="book__base book__base--l">${insideCover}</div><div class="book__base book__base--r">${endPage}</div>` +
+      fronts.map((f, i) => `<div class="leaf" data-i="${i}"><div class="leaf__face leaf__front">${f}</div><div class="leaf__face leaf__back">${backs[i]}</div></div>`).join('');
+    const leaves = $$('.leaf', bookEl);
+    const prev = $('#bookPrev'), next = $('#bookNext'), count = $('#bookCount');
+
+    const state = { t: 0 };
+    let shown = -1;
+    const render = () => {
+      const t = state.t;
+      leaves.forEach((l, i) => {
+        const p = Math.min(Math.max(t - i, 0), 1);
+        l.style.transform = `rotateY(${-180 * p}deg)`;
+        l.style.zIndex = p < .5 ? N - i : N + i;          // turning leaf switches stacks at the midpoint
+        l.style.setProperty('--shade', Math.sin(p * Math.PI).toFixed(3));
+        l.classList.toggle('is-turned', p >= .5);
+      });
+      const k = Math.round(t);
+      if (k !== shown) {
+        shown = k;
+        count.innerHTML = `<b>${LABELS[k]}</b> · ${k + 1} / ${N + 1}`;
+        prev.disabled = k === 0; next.disabled = k === N;
+        // keep keyboard focus off pages that are hidden behind others
+        leaves.forEach((l, i) => {
+          $$('a,button', l).forEach(a => a.tabIndex = -1);
+          l.setAttribute('aria-hidden', i === k || i === k - 1 ? 'false' : 'true');
+        });
+        $$('a', $('.book__base--r', bookEl)).forEach(a => a.tabIndex = k === N ? 0 : -1);
+      }
     };
-    $('#menuTabs').innerHTML = tabsHTML(cats, cats[0]);
-    bindTabs($('#menuTabs'), c => draw(c, true));
-    draw(cats[0], false);
+
+    // Without scroll animation: buttons flip pages with a CSS transition
+    let timer;
+    const goStatic = k => {
+      bookEl.classList.add('is-static');
+      const from = state.t;
+      state.t = k; render();
+      // pages moving in this step sit above everything until they land
+      leaves.forEach((l, i) => { if (i >= Math.min(from, k) && i < Math.max(from, k)) l.style.zIndex = 3 * N; });
+      clearTimeout(timer); timer = setTimeout(render, 900);
+    };
+    book = { N, state, render, el: bookEl, go: goStatic, current: () => Math.round(state.t) };
+
+    prev.addEventListener('click', () => book.go(Math.max(book.current() - 1, 0)));
+    next.addEventListener('click', () => book.go(Math.min(book.current() + 1, N)));
+    render();
   }
 
   /* ================= Portfolio page ================= */
@@ -540,6 +616,33 @@
       scrollTrigger: { trigger: '.hs', start: 'top top', end: () => '+=' + (track.scrollWidth - innerWidth),
         pin: true, scrub: .6, invalidateOnRefresh: true } });
   });
+
+  /* -- Menu book: pinned while scrolling, each step of scroll turns one page -- */
+  if (book) {
+    book.el.classList.remove('is-static');
+    // CSS smooth scrolling fights ScrollTrigger's snap (it overshoots a page), so turn it off here
+    document.documentElement.style.scrollBehavior = 'auto';
+    let aim = null;   // page a button click is heading to, so quick repeat clicks keep counting
+    // When scrolling stops part-way through a turn, finish it: one page forward when scrolling
+    // down, one page back when scrolling up (no momentum, so a fast flick never skips a page).
+    const snapPage = (p, self) => {
+      if (aim !== null) return aim / book.N;
+      const x = p * book.N;
+      return (self.direction > 0 ? Math.ceil(x - .03) : Math.floor(x + .03)) / book.N;
+    };
+    const turn = gsap.to(book.state, { t: book.N, ease: 'none', onUpdate: book.render,
+      scrollTrigger: { trigger: '.book-stage', start: 'top top', end: () => '+=' + innerHeight * .75 * book.N,
+        pin: true, scrub: .7, invalidateOnRefresh: true,
+        snap: { snapTo: snapPage, inertia: false, duration: { min: .3, max: .8 }, delay: .1, ease: 'power2.inOut' } } });
+    // Buttons scroll to the spot where that page is open, so scroll and buttons stay in sync
+    book.go = k => {
+      const st = turn.scrollTrigger;
+      aim = k;
+      scrollTo({ top: st.start + (st.end - st.start) * k / book.N, behavior: 'smooth' });
+    };
+    book.current = () => aim !== null ? aim : Math.round(turn.scrollTrigger.progress * book.N);
+    ScrollTrigger.addEventListener('scrollEnd', () => { aim = null; });
+  }
 
   /* -- Floating embers in the home hero -- */
   const hero = $('.hero');

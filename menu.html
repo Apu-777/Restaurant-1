@@ -26,9 +26,21 @@
     </section>
 
     <section class="menu">
+      <div class="book-stage">
+        <div class="wrap">
+          <div class="book" id="book"></div>
+          <div class="book__ctrl">
+            <button class="book__btn" id="bookPrev" type="button" aria-label="Previous page">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg><span>Previous</span>
+            </button>
+            <p class="book__count" id="bookCount" aria-live="polite"></p>
+            <button class="book__btn" id="bookNext" type="button" aria-label="Next page">
+              <span>Next</span><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
       <div class="wrap">
-        <div class="tabs reveal" role="tablist" id="menuTabs"></div>
-        <ul class="menu__list" id="menuList"></ul>
         <p class="menu__note reveal"><b>V</b> Vegetarian &nbsp;·&nbsp; <b>GF</b> Gluten-free &nbsp;·&nbsp; Please tell us about allergies before ordering. Menu changes with the market.</p>
       </div>
     </section>
