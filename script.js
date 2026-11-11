@@ -56,9 +56,13 @@
       <div class="wrap footer__grid">
         <div><a href="index.html" class="nav__logo">Ember<em>&amp;</em>Salt</a><p>Wood-fired cooking, seasonal produce and a short, honest menu.</p></div>
         <div><h4>Explore</h4><ul>${LINKS.map(l => `<li>${plain(l)}</li>`).join('')}</ul></div>
-        <div><h4>Visit</h4><ul><li>24 Riverside Road</li><li>Tue – Sun · 6pm – 11pm</li><li>+880 1234 567 890</li><li>hello@emberandsalt.example</li></ul></div>
+        <div><h4>Visit</h4><ul>
+          <li>Rokshana Monjil, Jumir khan Road, South Alekanda, Amtola, Barishal-8200, Bangladesh</li>
+          <li><a href="tel:+8801718897300">(+88) 017188-97300</a></li>
+          <li><a href="mailto:bpittech@gmail.com">bpittech@gmail.com</a></li>
+        </ul></div>
       </div>
-      <div class="wrap footer__base"><span>© 2026 Ember &amp; Salt</span><span>Instagram · Facebook · Maps</span></div>
+      <div class="wrap footer__base"><span>© 2026 BP IT Tech. All rights reserved.</span><span>Instagram · Facebook · Maps</span></div>
     </footer>
     <button class="totop" aria-label="Back to top">
       <svg class="ring" viewBox="0 0 56 56" aria-hidden="true"><circle class="bg" cx="28" cy="28" r="26"/><circle class="fg" cx="28" cy="28" r="26"/></svg>
