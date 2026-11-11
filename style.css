@@ -367,8 +367,12 @@ input:focus,select:focus,textarea:focus{border-color:var(--ember)}
 .chip:disabled{opacity:.3;text-decoration:line-through;cursor:not-allowed}
 .stepper{display:flex;align-items:center;gap:1.4rem}
 .stepper button{width:46px;height:46px;border-radius:50%;border:1px solid var(--line);background:none;font-size:1.4rem;cursor:pointer;transition:all .3s}
-.stepper button:hover{background:var(--ember);border-color:var(--ember)}
-.stepper output{font:300 2.6rem/1 var(--serif);min-width:2ch;text-align:center}
+.stepper button{flex:none;user-select:none;-webkit-user-select:none;touch-action:manipulation}
+.stepper button:hover:not(:disabled){background:var(--ember);border-color:var(--ember)}
+.stepper button:disabled{opacity:.35;cursor:default}
+.stepper input{width:3.4ch;padding:.1rem 0;font:300 2.6rem/1 var(--serif);text-align:center;border-bottom:1px dashed var(--line);-moz-appearance:textfield;appearance:textfield}
+.stepper input::-webkit-outer-spin-button,.stepper input::-webkit-inner-spin-button{-webkit-appearance:none;margin:0}
+.stepper input:hover,.stepper input:focus{border-bottom-color:var(--ember)}
 .wiz__nav{display:flex;justify-content:space-between;align-items:center;gap:1rem;margin-top:.6rem}
 .wiz__err{min-height:1.4rem;color:#ff8a7a;font-size:.92rem}
 .wiz__err.shake{animation:shake .45s}

@@ -434,9 +434,53 @@
     };
 
     dateIn.addEventListener('change', () => { S.date = dateIn.value; S.time = ''; });
-    const setGuests = n => { S.guests = Math.max(1, Math.min(8, n)); $('#gN').textContent = S.guests; S.time = ''; };
-    $('#gm').addEventListener('click', () => setGuests(S.guests - 1));
-    $('#gp').addEventListener('click', () => setGuests(S.guests + 1));
+    // Guests: 1–999, typed into the box or changed with − / + (hold a button to repeat)
+    const G_MIN = 1, G_MAX = 999;
+    const gIn = $('#gN'), gMinus = $('#gm'), gPlus = $('#gp');
+    const setGuests = n => {
+      n = Math.round(Number(n));
+      S.guests = Math.max(G_MIN, Math.min(G_MAX, Number.isFinite(n) ? n : G_MIN));
+      gIn.value = S.guests; S.time = '';
+      gMinus.disabled = S.guests <= G_MIN; gPlus.disabled = S.guests >= G_MAX;
+    };
+    // While typing: digits only, max 3; the box may be empty mid-edit
+    gIn.addEventListener('input', () => {
+      const v = gIn.value.replace(/\D/g, '').slice(0, 3);
+      if (v !== gIn.value) gIn.value = v;
+      if (v !== '' && +v >= G_MIN) { S.guests = +v; S.time = ''; gMinus.disabled = S.guests <= G_MIN; gPlus.disabled = false; }
+    });
+    // When done typing (blur / Enter): settle on a valid number
+    const commitGuests = () => setGuests(gIn.value === '' ? S.guests : gIn.value);
+    gIn.addEventListener('change', commitGuests);
+    gIn.addEventListener('blur', commitGuests);
+    gIn.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); commitGuests(); gIn.blur(); } });
+    gIn.addEventListener('focus', () => gIn.select());
+
+    const holdRepeat = (btn, delta) => {
+      let wait, rep, held = false;
+      const stop = () => { clearTimeout(wait); clearInterval(rep); };
+      btn.addEventListener('pointerdown', e => {
+        if (e.button !== 0 || btn.disabled) return;
+        stop(); held = false;
+        wait = setTimeout(() => {
+          let ticks = 0;
+          held = true;
+          rep = setInterval(() => {
+            ticks++;
+            setGuests(S.guests + delta * (ticks > 30 ? 10 : 1));   // speeds up after ~2 seconds
+            if (btn.disabled) stop();
+          }, 70);
+        }, 400);
+      });
+      ['pointerup', 'pointerleave', 'pointercancel'].forEach(t => btn.addEventListener(t, stop));
+      btn.addEventListener('click', () => {  // single tap / keyboard (skipped right after a hold)
+        if (held) { held = false; return; }
+        setGuests(S.guests + delta);
+      });
+    };
+    holdRepeat(gMinus, -1);
+    holdRepeat(gPlus, 1);
+    setGuests(S.guests);
 
     wiz.addEventListener('click', e => {
       const chip = e.target.closest('.chip');
@@ -451,6 +495,7 @@
       if (e.target.closest('[data-back]')) go(S.step - 1);
       if (e.target.closest('[data-next]')) {
         if (S.step === 1) {
+          commitGuests();
           if (!S.date) return err(panes[0], 'Please choose a date.');
           const [y, m, d] = S.date.split('-').map(Number);
           if (new Date(y, m - 1, d).getDay() === 1) return err(panes[0], 'We’re closed on Mondays — please pick another day.');
@@ -495,7 +540,7 @@
 
     $('#again').addEventListener('click', () => {
       Object.assign(S, { date: '', guests: 2, occasion: 'Dinner', seat: 'Dining room', time: '' });
-      dateIn.value = ''; $('#gN').textContent = 2; $('#rForm').reset(); $('#ok').classList.remove('go');
+      dateIn.value = ''; setGuests(2); $('#rForm').reset(); $('#ok').classList.remove('go');
       $$('#occ .chip').forEach((c, i) => c.classList.toggle('is-on', i === 0));
       $$('#seats .chip').forEach((c, i) => c.classList.toggle('is-on', i === 0));
       go(1);

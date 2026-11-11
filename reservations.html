@@ -41,13 +41,13 @@
               <h3 class="pane__t stag">When are you coming?</h3>
               <label class="stag">Date<input type="date" id="rDate"></label>
               <div class="field stag">
-                <span class="lab">Guests</span>
+                <label class="lab" for="gN">Guests</label>
                 <div class="stepper">
                   <button type="button" id="gm" aria-label="Fewer guests">−</button>
-                  <output id="gN">2</output>
+                  <input type="number" id="gN" value="2" min="1" max="999" step="1" inputmode="numeric" aria-label="Number of guests">
                   <button type="button" id="gp" aria-label="More guests">+</button>
                 </div>
-                <small>Party of nine or more? <a class="link" href="contact.html">Contact us</a>.</small>
+                <small>Type a number or use − / + (hold to go faster), up to 999 guests. For big groups we’ll call to confirm.</small>
               </div>
               <div class="field stag">
                 <span class="lab">Occasion</span>
