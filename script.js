@@ -731,34 +731,58 @@
 
     const ringEl = document.createElement('div'); ringEl.className = 'cur'; document.body.append(ringEl);
     const rx = gsap.quickTo(ringEl, 'x', { duration: .35, ease: 'power3' }), ry = gsap.quickTo(ringEl, 'y', { duration: .35, ease: 'power3' });
-    let tilted = null;
-    document.addEventListener('mousemove', e => {
-      rx(e.clientX); ry(e.clientY); ringEl.classList.add('on');
-      const t = e.target, view = !!t.closest('[data-view]');
+
+    // Hover image for the "Plan your visit" list ([data-pop] links)
+    let pop = null, pimg, px, py, popOn = null;
+    if ($('[data-pop]')) {
+      pop = document.createElement('div'); pop.className = 'pop'; pop.innerHTML = '<img alt="">'; document.body.append(pop);
+      pimg = $('img', pop);
+      gsap.set(pop, { opacity: 0, scale: .8 });
+      px = gsap.quickTo(pop, 'x', { duration: .5, ease: 'power3' }); py = gsap.quickTo(pop, 'y', { duration: .5, ease: 'power3' });
+    }
+    const showPop = a => {
+      if (a === popOn) return;
+      popOn = a;
+      if (a) {
+        pimg.removeAttribute('data-ph'); pimg.dataset.img = a.dataset.pop; pimg.src = src(a.dataset.pop, 600);
+        // 'auto' only replaces opacity/scale tweens; `true` would also kill the x/y follow tweens
+        gsap.to(pop, { opacity: 1, scale: 1, duration: .4, ease: 'power3.out', overwrite: 'auto' });
+      } else gsap.to(pop, { opacity: 0, scale: .8, duration: .3, overwrite: 'auto' });
+    };
+
+    // Everything that depends on "what is under the cursor" lives here. It runs on mouse move AND
+    // after scrolling, because the page can scroll under a still cursor without any mouse events.
+    let tilted = null, mx = -1, my = -1, popPaused = false;   // scrolling hides the hover image until the mouse really moves
+    const hoverAt = (t, x, y) => {
+      const el = t && t.closest ? t : null;
+      const view = !!(el && el.closest('[data-view]'));
       ringEl.classList.toggle('is-view', view);
-      ringEl.classList.toggle('is-link', !view && !!t.closest('a,button,summary,.tab,input,select,textarea,label'));
+      ringEl.classList.toggle('is-link', !view && !!(el && el.closest('a,button,summary,.tab,input,select,textarea,label')));
       // card tilt (delegated, so filtered/re-rendered cards work too)
-      const c = t.closest('.card,.pcard');
+      const c = el && el.closest('.card,.pcard');
       if (c !== tilted) { if (tilted) gsap.to(tilted, { rotationX: 0, rotationY: 0, duration: .8, ease: 'elastic.out(1,.5)' }); tilted = c; }
       if (c) { const r = c.getBoundingClientRect();
-        gsap.to(c, { rotationY: ((e.clientX - r.left) / r.width - .5) * 8, rotationX: -((e.clientY - r.top) / r.height - .5) * 8, transformPerspective: 900, duration: .5, ease: 'power2.out' }); }
-    });
-    document.addEventListener('mouseleave', () => ringEl.classList.remove('on'));
+        gsap.to(c, { rotationY: ((x - r.left) / r.width - .5) * 8, rotationX: -((y - r.top) / r.height - .5) * 8, transformPerspective: 900, duration: .5, ease: 'power2.out' }); }
+      if (pop) showPop(!popPaused && el ? el.closest('[data-pop]') : null);
+    };
+    const leaveAll = () => { ringEl.classList.remove('on'); hoverAt(null, mx, my); };
 
-    const links = $$('[data-pop]');
-    if (links.length) {
-      const pop = document.createElement('div'); pop.className = 'pop'; pop.innerHTML = '<img alt="">'; document.body.append(pop);
-      const pimg = $('img', pop);
-      gsap.set(pop, { opacity: 0, scale: .8 });
-      const px = gsap.quickTo(pop, 'x', { duration: .5, ease: 'power3' }), py = gsap.quickTo(pop, 'y', { duration: .5, ease: 'power3' });
-      document.addEventListener('mousemove', e => { px(e.clientX); py(e.clientY); });
-      links.forEach(a => {
-        a.addEventListener('mouseenter', () => {
-          pimg.removeAttribute('data-ph'); pimg.dataset.img = a.dataset.pop; pimg.src = src(a.dataset.pop, 600);
-          gsap.to(pop, { opacity: 1, scale: 1, duration: .4, ease: 'power3.out' });
-        });
-        a.addEventListener('mouseleave', () => gsap.to(pop, { opacity: 0, scale: .8, duration: .3 }));
-      });
-    }
+    document.addEventListener('mousemove', e => {
+      // browsers send a fake, zero-movement mousemove after scrolling; only a real move un-pauses the image
+      if (e.movementX || e.movementY || mx < 0) popPaused = false;
+      mx = e.clientX; my = e.clientY;
+      rx(mx); ry(my); ringEl.classList.add('on');
+      if (pop) { px(mx); py(my); }
+      hoverAt(e.target, mx, my);
+    });
+    let scrollTick = 0;
+    addEventListener('scroll', () => {
+      if (pop) { popPaused = true; showPop(null); }
+      if (mx < 0 || scrollTick) return;
+      scrollTick = requestAnimationFrame(() => { scrollTick = 0; hoverAt(document.elementFromPoint(mx, my), mx, my); });
+    }, { passive: true });
+    document.addEventListener('mouseleave', leaveAll);
+    addEventListener('blur', leaveAll);
+    addEventListener('pagehide', leaveAll);
   }
 })();
